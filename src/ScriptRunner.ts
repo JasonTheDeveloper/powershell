@@ -36,10 +36,11 @@ export default class ScriptRunner {
         };
         const scriptToExecute: string = new ScriptBuilder().getInlineScriptFile(
             this.inlineScript, this.errorActionPreference);
+        console.log(`Script: ${scriptToExecute}`)
         ScriptRunner.filePath = await FileUtils.createScriptFile(scriptToExecute);
         core.debug(`script file to run: ${ScriptRunner.filePath}`);
         await PowerShellToolRunner.init();
-        const exitCode: number = await PowerShellToolRunner.executePowerShellScriptBlock(ScriptRunner.filePath, options);
+        const exitCode: number = await PowerShellToolRunner.executePowerShellScriptBlock(scriptToExecute, options);
         if (exitCode !== 0) {
             core.setOutput(`Azure PowerShell exited with code:`, exitCode.toString());
             if (this.failOnStandardErr) {
